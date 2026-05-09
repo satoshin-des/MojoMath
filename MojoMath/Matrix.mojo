@@ -1,3 +1,5 @@
+from std.random import random_float64
+
 struct Matrix(Writable):
     var n: Int
     var m: Int
@@ -22,13 +24,18 @@ struct Matrix(Writable):
         else:
             return self.entry[i][j]
     
+    fn set_random(mut self, min: Float64 = 0.0, max: Float64 = 1.0):
+        for i in range(self.n):
+            for j in range(self.m):
+                self.entry[i][j] = random_float64() * (max - min) + min
+
     fn norm(self, p: Int = 2) raises -> Float64:
-        """Compute Lp-norm of matrix
+        """Compute Lp-norm of matrix.
         Args:
-            p: Int "p" of Lp-norm
+            p: Int "p" of Lp-norm.
         
         Returns:
-            Lp-norm
+            Lp-norm.
         """
         if p < 1:
             raise Error("\"p\" of the norm must be greater than or equal to 1")

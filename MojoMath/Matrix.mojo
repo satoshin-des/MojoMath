@@ -103,3 +103,12 @@ struct Matrix(Writable):
             for j in range(self.m):
                 s += self.entry[i][j]
         return s
+
+    fn prod(self) -> Float64:
+        """Compute product of all entries in matrix.
+        """
+        var p: Float64 = 1.0
+        for i in range(self.n):
+            for j in range(self.m):
+                p *= self.entry[i][j]
+        return p

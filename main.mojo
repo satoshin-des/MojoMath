@@ -8,3 +8,4 @@ fn main() raises:
     print("tr(A)=", A.trace())
     print("||A||=", A.norm())
     print("sum(A)=", A.sum())    
+    print("prod(A)=", A.prod())

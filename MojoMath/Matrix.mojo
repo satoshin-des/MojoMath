@@ -27,12 +27,22 @@ struct Matrix(Writable):
     fn set_random(mut self, min: Float64 = 0.0, max: Float64 = 1.0):
         """Set all entries of matrix to random.
         Args:
-            min: Float64 lower bound of random
-            max: Float64 upper bound of random
+            min: Float64 lower bound of random.
+            max: Float64 upper bound of random.
         """
         for i in range(self.n):
             for j in range(self.m):
                 self.entry[i][j] = random_float64() * (max - min) + min
+    
+    fn set_identity(mut self):
+        """Set matrix to identity matrix.
+        """
+        for i in range(self.n):
+            for j in range(self.m):
+                if i == j:
+                    self.entry[i][j] = 1.0
+                else:
+                    self.entry[i][j] = 0.0
 
     fn norm(self, p: Int = 2) raises -> Float64:
         """Compute Lp-norm of matrix.

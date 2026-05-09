@@ -7,4 +7,4 @@ fn main() raises:
     print("A=", A)
     print("tr(A)=", A.trace())
     print("||A||=", A.norm())
-    
+    print("sum(A)=", A.sum())    

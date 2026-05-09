@@ -45,7 +45,7 @@ struct Matrix(Writable):
                     self.entry[i][j] = 0.0
     
     fn round_to_int(mut self):
-        """Round all entries to integer
+        """Round all entries to integer.
         """
         for i in range(self.n):
             for j in range(self.m):
@@ -93,4 +93,13 @@ struct Matrix(Writable):
         var s: Float64 = 0.0
         for i in range(min(self.n, self.m)):
             s += self.entry[i][i]
+        return s
+
+    fn sum(self) -> Float64:
+        """Compute summation of all entries in matrix.
+        """
+        var s: Float64 = 0.0
+        for i in range(self.n):
+            for j in range(self.m):
+                s += self.entry[i][j]
         return s

@@ -14,7 +14,7 @@ struct Matrix(Writable):
             self.entry.append(List[Float64](length=self.m, fill=0.0))
     
     fn write_to(self, mut writer: Some[Writer]):
-        writer.write(self.entry)
+        writer.write(String(self.entry).replace("],", "],\n"))
 
     fn at(self, i: Int, j: Int) raises -> Float64:
         if (i < 0) or (i >= self.n):

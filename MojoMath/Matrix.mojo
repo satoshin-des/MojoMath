@@ -79,3 +79,11 @@ struct Matrix(Writable):
                 if abs(self.entry[i][j]) > err:
                     return False
         return True
+    
+    fn trace(self) -> Float64:
+        """Compute trace.
+        """
+        var s: Float64 = 0.0
+        for i in range(min(self.n, self.m)):
+            s += self.entry[i][i]
+        return s

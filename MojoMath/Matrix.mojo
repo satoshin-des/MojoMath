@@ -25,6 +25,11 @@ struct Matrix(Writable):
             return self.entry[i][j]
     
     fn set_random(mut self, min: Float64 = 0.0, max: Float64 = 1.0):
+        """Set all entries of matrix to random.
+        Args:
+            min: Float64 lower bound of random
+            max: Float64 upper bound of random
+        """
         for i in range(self.n):
             for j in range(self.m):
                 self.entry[i][j] = random_float64() * (max - min) + min

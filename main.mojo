@@ -1,12 +1,18 @@
-from mojo_math.Matrix import Matrix
+from mojo_math import Matrix
 
 fn main() raises:
     var A = Matrix(3, 3)
     var B = Matrix(3, 3)
+    var u = Matrix.Vector(3)
+    var v = Matrix.Vector(3)
     A.set_random(-10, 10)
     B.set_random(-10, 10)
+    u.set_random(-10, 10)
+    v.set_random(-10, 10)
     A.round_to_int()
     B.round_to_int()
+    u.round_to_int()
+    v.round_to_int()
     print("A=", A)
     print("tr(A)=", A.trace())
     print("||A||=", A.norm())
@@ -20,4 +26,7 @@ fn main() raises:
     print("A*B=", A * B)
     print("A==B?", A == B)
     print("A!=B?", A != B)
-    
+
+    print("u=", u)
+    print("v=", v)
+    print("<u, v>=", u.inner_product(v))

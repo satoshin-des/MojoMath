@@ -64,6 +64,48 @@ struct Matrix(Writable, Movable):
                 if abs(self.entry[i][j] - other.entry[i][j]) > 1e-6:
                     return True
         return False
+    
+    @staticmethod
+    fn Vector(n: Int) -> Matrix:
+        var v = Matrix(n, 1)
+        return v^
+
+    fn inner_product(self, other: Matrix) raises -> Float64:
+        """Inner product of two vectors.
+        Args:
+            other: Matrix Vector.
+        
+        Returns:
+            Inner product.
+        """
+        if ((self.n != 1) and (self.m != 1)) or ((other.n != 1) and (other.m != 1)):
+            raise Error("Inner product is only defined Matrix class is Vector-like")
+
+        var s: Float64 = 0.0
+
+        if self.n == 1:
+            if other.n == 1:
+                if self.m != other.m:
+                    raise Error("Inner product of ther size vectors is not defined")
+                for i in range(self.m):
+                    s += self.entry[0][i] * other.entry[0][i]
+            else:
+                if self.m != other.n:
+                    raise Error("Inner product of ther size vectors is not defined")
+                for i in range(self.m):
+                    s += self.entry[0][i] * other.entry[i][0]
+        else:
+            if other.n == 1:
+                if self.n != other.m:
+                    raise Error("Inner product of ther size vectors is not defined")
+                for i in range(self.n):
+                    s += self.entry[i][0] * other.entry[0][i]
+            else:
+                if self.n != other.n:
+                    raise Error("Inner product of ther size vectors is not defined")
+                for i in range(self.n):
+                    s += self.entry[i][0] * other.entry[i][0]
+        return s
 
     fn __copyinit__(mut self, existing: Self):
         self.entry = existing.entry.copy()
@@ -181,4 +223,3 @@ struct Matrix(Writable, Movable):
             for j in range(self.m):
                 mat.entry[j][i] = self.entry[i][j]
         return mat^
-    

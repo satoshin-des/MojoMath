@@ -61,3 +61,21 @@ struct Matrix(Writable):
                 s += pow(abs(self.entry[i][j]), p)
         
         return pow(s, 1.0 / Float64(p))
+
+    fn is_zero(self, err: Float64 = 1e-6) raises -> Bool:
+        """Test the matrix is zero or non-zero.
+        Args:
+            err: Float64: error of zero-testing.
+        
+        Returns:
+            True if is zero-matrix.
+            Flase if is non-zero-matrix.
+        """
+        if err < 0:
+            raise Error("error of zero-testing must be greater than or equal to 0")
+        
+        for i in range(self.n):
+            for j in range(self.m):
+                if abs(self.entry[i][j]) > err:
+                    return False
+        return True

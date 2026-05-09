@@ -10,3 +10,5 @@ fn main() raises:
     print("sum(A)=", A.sum())    
     print("prod(A)=", A.prod())
     print("mean(A)=", A.mean())
+    print("A^T=", A.transpose())
+    

@@ -1,6 +1,6 @@
 from std.random import random_float64
 
-struct Matrix(Writable):
+struct Matrix(Writable, Movable):
     var n: Int
     var m: Int
     var entry: List[List[Float64]]
@@ -13,6 +13,11 @@ struct Matrix(Writable):
         for _ in range(self.n):
             self.entry.append(List[Float64](length=self.m, fill=0.0))
     
+    fn __copyinit__(mut self, existing: Self):
+        self.entry = existing.entry.copy()
+        self.m = existing.m
+        self.n = existing.n
+
     fn write_to(self, mut writer: Some[Writer]):
         writer.write(String(self.entry).replace("],", "],\n"))
 
@@ -114,6 +119,14 @@ struct Matrix(Writable):
         return p
 
     fn mean(self) -> Float64:
-        """Compute mean
+        """Compute mean.
         """
         return self.sum() / Float64(self.n * self.m)
+    
+    fn transpose(self) -> Matrix:
+        var mat = Matrix(self.m, self.n)
+        for i in range(self.n):
+            for j in range(self.m):
+                mat.entry[j][i] = self.entry[i][j]
+        return mat^
+        

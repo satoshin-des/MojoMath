@@ -1,6 +1,7 @@
 # MojoMath
 
 MojoMath is mathematic library for Mojo-language.
+And this library is under developing.
 
 # How to install
 

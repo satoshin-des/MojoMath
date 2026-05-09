@@ -9,3 +9,4 @@ fn main() raises:
     print("||A||=", A.norm())
     print("sum(A)=", A.sum())    
     print("prod(A)=", A.prod())
+    print("mean(A)=", A.mean())

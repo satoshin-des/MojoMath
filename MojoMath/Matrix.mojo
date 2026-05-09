@@ -112,3 +112,8 @@ struct Matrix(Writable):
             for j in range(self.m):
                 p *= self.entry[i][j]
         return p
+
+    fn mean(self) -> Float64:
+        """Compute mean
+        """
+        return self.sum() / Float64(self.n * self.m)

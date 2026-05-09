@@ -43,6 +43,13 @@ struct Matrix(Writable):
                     self.entry[i][j] = 1.0
                 else:
                     self.entry[i][j] = 0.0
+    
+    fn round_to_int(mut self):
+        """Round all entries to integer
+        """
+        for i in range(self.n):
+            for j in range(self.m):
+                self.entry[i][j] = round(self.entry[i][j])
 
     fn norm(self, p: Int = 2) raises -> Float64:
         """Compute Lp-norm of matrix.

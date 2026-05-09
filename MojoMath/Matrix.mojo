@@ -13,6 +13,58 @@ struct Matrix(Writable, Movable):
         for _ in range(self.n):
             self.entry.append(List[Float64](length=self.m, fill=0.0))
     
+    fn __add__(self, other: Matrix) raises -> Matrix:
+        if (self.n != other.n) or (self.m != other.m):
+            raise Error("Addition of other size matrices is not defined.")
+        
+        var mat = Matrix(self.n, self.m)
+        for i in range(self.n):
+            for j in range(self.m):
+                mat.entry[i][j] = self.entry[i][j] + other.entry[i][j]
+        return mat^
+
+    fn __sub__(self, other: Matrix) raises -> Matrix:
+        if (self.n != other.n) or (self.m != other.m):
+            raise Error("Addition of other size matrices is not defined.")
+        
+        var mat = Matrix(self.n, self.m)
+        for i in range(self.n):
+            for j in range(self.m):
+                mat.entry[i][j] = self.entry[i][j] - other.entry[i][j]
+        return mat^
+    
+    fn __mul__(self, other: Matrix) raises -> Matrix:
+        if self.m != other.n:
+            raise Error("Multiplication is not defined")
+        
+        var mat = Matrix(self.n, self.m)
+        for i in range(self.n):
+            for j in range(self.m):
+                mat.entry[i][j] = 0.0
+                for k in range(self.m):
+                    mat.entry[i][j] += self.entry[i][k] * other.entry[k][j]
+        return mat^
+    
+    fn __eq__(self, other: Matrix) -> Bool:
+        if (self.n != other.n) or (self.m != other.m):
+            return False
+
+        for i in range(self.n):
+            for j in range(self.m):
+                if abs(self.entry[i][j] - other.entry[i][j]) > 1e-6:
+                    return False
+        return True
+    
+    fn __ne__(self, other: Matrix) -> Bool:
+        if (self.n != other.n) or (self.m != other.m):
+            return True
+
+        for i in range(self.n):
+            for j in range(self.m):
+                if abs(self.entry[i][j] - other.entry[i][j]) > 1e-6:
+                    return True
+        return False
+
     fn __copyinit__(mut self, existing: Self):
         self.entry = existing.entry.copy()
         self.m = existing.m
@@ -81,7 +133,7 @@ struct Matrix(Writable, Movable):
         
         Returns:
             True if is zero-matrix.
-            Flase if is non-zero-matrix.
+            False if is non-zero-matrix.
         """
         if err < 0:
             raise Error("error of zero-testing must be greater than or equal to 0")
@@ -129,4 +181,4 @@ struct Matrix(Writable, Movable):
             for j in range(self.m):
                 mat.entry[j][i] = self.entry[i][j]
         return mat^
-        
+    

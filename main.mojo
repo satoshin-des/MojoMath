@@ -1,9 +1,12 @@
 from mojo_math.Matrix import Matrix
 
 fn main() raises:
-    var A = Matrix(10, 10)
+    var A = Matrix(3, 3)
+    var B = Matrix(3, 3)
     A.set_random(-10, 10)
+    B.set_random(-10, 10)
     A.round_to_int()
+    B.round_to_int()
     print("A=", A)
     print("tr(A)=", A.trace())
     print("||A||=", A.norm())
@@ -11,4 +14,10 @@ fn main() raises:
     print("prod(A)=", A.prod())
     print("mean(A)=", A.mean())
     print("A^T=", A.transpose())
+
+    print("B=", B)
+    print("A+B=", A + B)
+    print("A*B=", A * B)
+    print("A==B?", A == B)
+    print("A!=B?", A != B)
     

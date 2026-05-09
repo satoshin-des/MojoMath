@@ -1,5 +1,9 @@
 from mojo_math.Matrix import Matrix
 
-fn main():
+fn main() raises:
     var s = Matrix(10, 10)
     print(s)
+    
+    
+    
+    print(s.at(90, 3))

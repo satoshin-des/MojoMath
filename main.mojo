@@ -1,10 +1,10 @@
 from mojo_math import Matrix
 
 fn main() raises:
-    var A = Matrix(3, 3)
-    var B = Matrix(3, 3)
-    var u = Matrix.Vector(3)
-    var v = Matrix.Vector(3)
+    var A = Matrix[DType.int64](3, 3)
+    var B = Matrix[DType.int64](3, 3)
+    var u = Matrix[DType.int64].Vector(3)
+    var v = Matrix[DType.int64].Vector(3)
     A.set_random(-10, 10)
     B.set_random(-10, 10)
     u.set_random(-10, 10)

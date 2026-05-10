@@ -1,76 +1,76 @@
 from std.random import random_float64
 
-struct Matrix(Writable, Movable):
+struct Matrix[type: DType](Writable, Movable):
     var n: Int
     var m: Int
-    var entry: List[List[Float64]]
+    var entry: List[List[Scalar[Self.type]]]
 
     fn __init__(out self, n_: Int, m_: Int):
-        self.entry = List[List[Float64]]()
+        self.entry = List[List[Scalar[Self.type]]]()
         self.n = n_
         self.m = m_
 
         for _ in range(self.n):
-            self.entry.append(List[Float64](length=self.m, fill=0.0))
+            self.entry.append(List[Scalar[Self.type]](length=self.m, fill=0))
     
-    fn __add__(self, other: Matrix) raises -> Matrix:
+    fn __add__(self, other: Self) raises -> Self:
         if (self.n != other.n) or (self.m != other.m):
             raise Error("Addition of other size matrices is not defined.")
         
-        var mat = Matrix(self.n, self.m)
+        var mat = Self(self.n, self.m)
         for i in range(self.n):
             for j in range(self.m):
                 mat.entry[i][j] = self.entry[i][j] + other.entry[i][j]
         return mat^
 
-    fn __sub__(self, other: Matrix) raises -> Matrix:
+    fn __sub__(self, other: Self) raises -> Self:
         if (self.n != other.n) or (self.m != other.m):
             raise Error("Addition of other size matrices is not defined.")
         
-        var mat = Matrix(self.n, self.m)
+        var mat = Self(self.n, self.m)
         for i in range(self.n):
             for j in range(self.m):
                 mat.entry[i][j] = self.entry[i][j] - other.entry[i][j]
         return mat^
     
-    fn __mul__(self, other: Matrix) raises -> Matrix:
+    fn __mul__(self, other: Self) raises -> Self:
         if self.m != other.n:
             raise Error("Multiplication is not defined")
         
-        var mat = Matrix(self.n, self.m)
+        var mat = Self(self.n, self.m)
         for i in range(self.n):
             for j in range(self.m):
-                mat.entry[i][j] = 0.0
+                mat.entry[i][j] = 0
                 for k in range(self.m):
                     mat.entry[i][j] += self.entry[i][k] * other.entry[k][j]
         return mat^
     
-    fn __eq__(self, other: Matrix) -> Bool:
+    fn __eq__(self, other: Self) -> Bool:
         if (self.n != other.n) or (self.m != other.m):
             return False
 
         for i in range(self.n):
             for j in range(self.m):
-                if abs(self.entry[i][j] - other.entry[i][j]) > 1e-6:
+                if abs(Float64(self.entry[i][j] - other.entry[i][j])) > 1e-6:
                     return False
         return True
     
-    fn __ne__(self, other: Matrix) -> Bool:
+    fn __ne__(self, other: Self) -> Bool:
         if (self.n != other.n) or (self.m != other.m):
             return True
 
         for i in range(self.n):
             for j in range(self.m):
-                if abs(self.entry[i][j] - other.entry[i][j]) > 1e-6:
+                if abs(Float64(self.entry[i][j] - other.entry[i][j])) > 1e-6:
                     return True
         return False
     
     @staticmethod
-    fn Vector(n: Int) -> Matrix:
-        var v = Matrix(n, 1)
+    fn Vector(n: Int) -> Self:
+        var v = Self(n, 1)
         return v^
 
-    fn inner_product(self, other: Matrix) raises -> Float64:
+    fn inner_product(self, other: Self) raises -> Scalar[Self.type]:
         """Inner product of two vectors.
         Args:
             other: Matrix Vector.
@@ -81,7 +81,7 @@ struct Matrix(Writable, Movable):
         if ((self.n != 1) and (self.m != 1)) or ((other.n != 1) and (other.m != 1)):
             raise Error("Inner product is only defined Matrix class is Vector-like")
 
-        var s: Float64 = 0.0
+        var s: Scalar[Self.type] = 0
 
         if self.n == 1:
             if other.n == 1:
@@ -107,13 +107,13 @@ struct Matrix(Writable, Movable):
                     s += self.entry[i][0] * other.entry[i][0]
         return s
     
-    fn hadamard_product(self, other: Matrix) raises -> Matrix:
+    fn hadamard_product(self, other: Self) raises -> Self:
         """Hadamard product of two matrices.
         """
         if (self.n != other.n) or (self.m != other.m):
             raise Error("Hadamard product of other sized matrices is not defined.")
         
-        var m: Matrix = Matrix(self.n, self.m)
+        var m: Self = Self(self.n, self.m)
 
         for i in range(self.n):
             for j in range(self.m):
@@ -129,7 +129,7 @@ struct Matrix(Writable, Movable):
     fn write_to(self, mut writer: Some[Writer]):
         writer.write(String(self.entry).replace("],", "],\n"))
 
-    fn at(self, i: Int, j: Int) raises -> Float64:
+    fn at(self, i: Int, j: Int) raises -> Scalar[Self.type]:
         if (i < 0) or (i >= self.n):
             raise Error("index is out-of-range")
         elif (j < 0) or (j >= self.m):
@@ -137,15 +137,15 @@ struct Matrix(Writable, Movable):
         else:
             return self.entry[i][j]
     
-    fn set_random(mut self, min: Float64 = 0.0, max: Float64 = 1.0):
+    fn set_random(mut self, min: Scalar[Self.type] = 0, max: Scalar[Self.type] = 1) raises:
         """Set all entries of matrix to random.
         Args:
-            min: Float64 lower bound of random.
-            max: Float64 upper bound of random.
+            min: T lower bound of random.
+            max: T upper bound of random.
         """
         for i in range(self.n):
             for j in range(self.m):
-                self.entry[i][j] = random_float64() * (max - min) + min
+                self.entry[i][j] = Scalar[Self.type](random_float64() * Float64(max - min) + Float64(min))
     
     fn set_identity(mut self):
         """Set matrix to identity matrix.
@@ -153,11 +153,11 @@ struct Matrix(Writable, Movable):
         for i in range(self.n):
             for j in range(self.m):
                 if i == j:
-                    self.entry[i][j] = 1.0
+                    self.entry[i][j] = 1
                 else:
-                    self.entry[i][j] = 0.0
+                    self.entry[i][j] = 0
     
-    fn fill(mut self, a: Float64):
+    fn fill(mut self, a: Scalar[Self.type]):
         """Set all entries of matrix to ``a``.
         """
         for i in range(self.n):
@@ -185,7 +185,7 @@ struct Matrix(Writable, Movable):
         var s: Float64 = 0.0
         for i in range(self.n):
             for j in range(self.m):
-                s += pow(abs(self.entry[i][j]), p)
+                s += pow(abs(Float64(self.entry[i][j])), p)
         
         return pow(s, 1.0 / Float64(p))
 
@@ -203,31 +203,31 @@ struct Matrix(Writable, Movable):
         
         for i in range(self.n):
             for j in range(self.m):
-                if abs(self.entry[i][j]) > err:
+                if abs(Float64(self.entry[i][j])) > err:
                     return False
         return True
     
-    fn trace(self) -> Float64:
+    fn trace(self) -> Scalar[Self.type]:
         """Compute trace.
         """
-        var s: Float64 = 0.0
+        var s: Scalar[Self.type] = 0
         for i in range(min(self.n, self.m)):
             s += self.entry[i][i]
         return s
 
-    fn sum(self) -> Float64:
+    fn sum(self) -> Scalar[Self.type]:
         """Compute summation of all entries in matrix.
         """
-        var s: Float64 = 0.0
+        var s: Scalar[Self.type] = 0
         for i in range(self.n):
             for j in range(self.m):
                 s += self.entry[i][j]
         return s
 
-    fn prod(self) -> Float64:
+    fn prod(self) -> Scalar[Self.type]:
         """Compute product of all entries in matrix.
         """
-        var p: Float64 = 1.0
+        var p: Scalar[Self.type] = 1
         for i in range(self.n):
             for j in range(self.m):
                 p *= self.entry[i][j]
@@ -236,32 +236,32 @@ struct Matrix(Writable, Movable):
     fn mean(self) -> Float64:
         """Compute mean.
         """
-        return self.sum() / Float64(self.n * self.m)
+        return Float64(self.sum()) / Float64(self.n * self.m)
     
-    fn transpose(self) -> Matrix:
+    fn transpose(self) -> Self:
         """Compute tranpose of Matrix.
         """
-        var mat = Matrix(self.m, self.n)
+        var mat = Self(self.m, self.n)
         for i in range(self.n):
             for j in range(self.m):
                 mat.entry[j][i] = self.entry[i][j]
         return mat^
 
-    fn det(self) -> Float64:
+    fn det(self) -> Scalar[Self.type]:
         """Compute a determinant.
         """
-        var a: List[List[Float64]] = self.entry.copy()
+        var a: List[List[Scalar[Self.type]]] = self.entry.copy()
         var r: Int = 0
-        var m: Float64
+        var m: Scalar[Self.type]
         var p: Int = 0
-        var v: List[Float64]
+        var v: List[Scalar[Self.type]]
         for j in range(self.n):
             m = -1
             for i in range(j, self.n):
                 if abs(a[i][j]) > m:
                     m = abs(a[i][j])
                     p = i
-            if abs(a[p][j]) < 1e-6:
+            if abs(Float64(a[p][j])) < 1e-6:
                 return 0
             if p > j:
                 v = a[j].copy()
@@ -273,14 +273,14 @@ struct Matrix(Writable, Movable):
                 for k in range(j, self.n):
                     a[i][k] -= m * a[j][k]
         
-        var d: Float64 = 1
+        var d: Scalar[Self.type] = 1
         if r & 1:
             d = -1
         for i in range(self.n):
             d *= a[i][i]
         return d
 
-    fn pow(self, n: Int) raises -> Matrix:
+    fn pow(self, n: Int) raises -> Self:
         """Compute the power of matrix.
         Args:
             n: Int exponent of the power.
@@ -293,14 +293,14 @@ struct Matrix(Writable, Movable):
         if self.n != self.m:
             raise Error("Power of non-square matrix is not defined")
         
-        var res: Matrix = Matrix(self.n, self.n)
+        var res: Self = Self(self.n, self.n)
         res.set_identity()
 
         if n == 0:
             return res^
 
         var cur_n: Int = n
-        var a: Matrix = Matrix(self.n, self.n)
+        var a: Self = Self(self.n, self.n)
         a.entry = self.entry.copy()
 
         while cur_n > 0:

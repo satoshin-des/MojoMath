@@ -218,10 +218,44 @@ struct Matrix(Writable, Movable):
         return self.sum() / Float64(self.n * self.m)
     
     fn transpose(self) -> Matrix:
-        """Compute tranpose of Matrix
+        """Compute tranpose of Matrix.
         """
         var mat = Matrix(self.m, self.n)
         for i in range(self.n):
             for j in range(self.m):
                 mat.entry[j][i] = self.entry[i][j]
         return mat^
+
+    fn det(self) -> Float64:
+        """Compute a determinant.
+        """
+        var a: List[List[Float64]] = self.entry.copy()
+        var r: Int = 0
+        var m: Float64
+        var p: Int = 0
+        var v: List[Float64]
+        for j in range(self.n):
+            m = -1
+            for i in range(j, self.n):
+                if abs(a[i][j]) > m:
+                    m = abs(a[i][j])
+                    p = i
+            if abs(a[p][j]) < 1e-6:
+                return 0
+            if p > j:
+                v = a[j].copy()
+                a[j] = a[p].copy()
+                a[p] = v.copy()
+                r += 1
+            for i in range(j + 1, self.n):
+                m = a[i][j] / a[j][j]
+                for k in range(j, self.n):
+                    a[i][k] -= m * a[j][k]
+        
+        var d: Float64 = 1
+        if r & 1:
+            d = -1
+        for i in range(self.n):
+            d *= a[i][i]
+        return d
+

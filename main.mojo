@@ -16,6 +16,7 @@ fn main() raises:
     print("A=", A)
     print("tr(A)=", A.trace())
     print("||A||=", A.norm())
+    print("det(A)=", A.det())
     print("sum(A)=", A.sum())    
     print("prod(A)=", A.prod())
     print("mean(A)=", A.mean())

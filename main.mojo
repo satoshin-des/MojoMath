@@ -25,6 +25,7 @@ fn main() raises:
     print("B=", B)
     print("A+B=", A + B)
     print("A*B=", A * B)
+    print("A〇B=", A.hadamard_product(B))
     print("A==B?", A == B)
     print("A!=B?", A != B)
     print("A^3=", A.pow(3))

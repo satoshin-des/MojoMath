@@ -106,6 +106,20 @@ struct Matrix(Writable, Movable):
                 for i in range(self.n):
                     s += self.entry[i][0] * other.entry[i][0]
         return s
+    
+    fn hadamard_product(self, other: Matrix) raises -> Matrix:
+        """Hadamard product of two matrices.
+        """
+        if (self.n != other.n) or (self.m != other.m):
+            raise Error("Hadamard product of other sized matrices is not defined.")
+        
+        var m: Matrix = Matrix(self.n, self.m)
+
+        for i in range(self.n):
+            for j in range(self.m):
+                m.entry[i][j] = self.entry[i][j] * other.entry[i][j]
+        
+        return m^
 
     fn __copyinit__(mut self, existing: Self):
         self.entry = existing.entry.copy()
@@ -142,6 +156,13 @@ struct Matrix(Writable, Movable):
                     self.entry[i][j] = 1.0
                 else:
                     self.entry[i][j] = 0.0
+    
+    fn fill(mut self, a: Float64):
+        """Set all entries of matrix to ``a``.
+        """
+        for i in range(self.n):
+            for j in range(self.m):
+                self.entry[i][j] = a
     
     fn round_to_int(mut self):
         """Round all entries to integer.

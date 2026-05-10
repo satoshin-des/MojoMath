@@ -218,6 +218,8 @@ struct Matrix(Writable, Movable):
         return self.sum() / Float64(self.n * self.m)
     
     fn transpose(self) -> Matrix:
+        """Compute tranpose of Matrix
+        """
         var mat = Matrix(self.m, self.n)
         for i in range(self.n):
             for j in range(self.m):

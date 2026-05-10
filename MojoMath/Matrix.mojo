@@ -259,3 +259,32 @@ struct Matrix(Writable, Movable):
             d *= a[i][i]
         return d
 
+    fn pow(self, n: Int) raises -> Matrix:
+        """Compute the power of matrix.
+        Args:
+            n: Int exponent of the power.
+        
+        Returns:
+            An n-th power.
+        """
+        if n < 0:
+            raise Error("Exponential must be greater than or equal to 0.")
+        if self.n != self.m:
+            raise Error("Power of non-square matrix is not defined")
+        
+        var res: Matrix = Matrix(self.n, self.n)
+        res.set_identity()
+
+        if n == 0:
+            return res^
+
+        var cur_n: Int = n
+        var a: Matrix = Matrix(self.n, self.n)
+        a.entry = self.entry.copy()
+
+        while cur_n > 0:
+            if cur_n & 1:
+                res = res * a
+            a = a * a
+            cur_n = cur_n >> 1
+        return res^

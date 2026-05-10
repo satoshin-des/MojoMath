@@ -27,6 +27,8 @@ fn main() raises:
     print("A*B=", A * B)
     print("A==B?", A == B)
     print("A!=B?", A != B)
+    print("A^3=", A.pow(3))
+    print("A*A*A=", A * A * A)
 
     print("u=", u)
     print("v=", v)

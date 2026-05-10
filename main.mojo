@@ -31,6 +31,9 @@ fn main() raises:
     print("A^3=", A.pow(3))
     print("A*A*A=", A * A * A)
 
+    var hoge = A.lu()
+    print("LU(A)=", hoge[0], "\n", hoge[1])
+
     print("u=", u)
     print("v=", v)
     print("<u, v>=", u.inner_product(v))

@@ -157,6 +157,14 @@ struct Matrix[type: DType](Writable, Movable):
                 else:
                     self.entry[i][j] = 0
     
+    fn set_as[uype: DType](mut self, mat: Matrix[uype]) raises:
+        if (self.n != mat.n) or (self.m != mat.m):
+            raise Error("matrix sizes is defferent.")
+
+        for i in range(self.n):
+            for j in range(self.m):
+                self.entry[i][j] = Scalar[Self.type](mat.entry[i][j])
+    
     fn fill(mut self, a: Scalar[Self.type]):
         """Set all entries of matrix to ``a``.
         """
@@ -309,3 +317,23 @@ struct Matrix[type: DType](Writable, Movable):
             a = a * a
             cur_n = cur_n >> 1
         return res^
+
+    fn lu(self) raises -> Tuple[Matrix[DType.float64], Matrix[DType.float64]]:
+        """LU-decomposite matrix.
+        Returns:
+            Tuple of the lower triangular matrix and upper triangular matrix.
+        """
+        if self.n != self.m:
+            raise Error("Augment for ``lu`` must be square matrix")
+        var U = Matrix[DType.float64](self.n, self.n)
+        var L = Matrix[DType.float64](self.n, self.n)
+        L.set_identity()
+        U.set_as(self)
+
+        for k in range(self.n - 1):
+            for j in range(k + 1, self.n):
+                L.entry[j][k] = U.entry[j][k] / U.entry[k][k]
+                for i in range(k, self.n):
+                    U.entry[j][i] -= L.entry[j][k] * U.entry[k][i]
+        
+        return (L^, U^)
